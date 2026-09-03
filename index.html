@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kig 头壳店铺创业调研报告</title>
+<style>
+:root{
+  --bg:#12101c; --bg2:#181426; --bg3:#1f1a33; --card:#1a1628; --card2:#221d38;
+  --border:#2d2547; --border2:#3d3263;
+  --fg:#e8e2f4; --fg2:#b3a9d0; --fg3:#7d7299;
+  --pink:#ff7ab8; --pink2:#ffa8d0; --purple:#b388ff; --purple2:#d3b8ff;
+  --grad:linear-gradient(120deg,#ff7ab8,#b388ff);
+  --green:#6fd9a8; --amber:#ffc36b; --red:#ff7d7d; --cyan:#6fd3e8;
+  --mono:'Cascadia Code','JetBrains Mono',Consolas,'Courier New',monospace;
+  --serif:'Segoe UI',system-ui,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{background:var(--bg);color:var(--fg);font-family:var(--serif);line-height:1.8;font-size:15.5px}
+a{color:var(--purple2);text-decoration:none}
+a:hover{text-decoration:underline}
+::selection{background:rgba(255,122,184,.35)}
+
+/* ===== 顶部渐变光晕 ===== */
+body::before{content:'';position:fixed;inset:-20% -10% auto;height:420px;z-index:-1;
+  background:radial-gradient(60% 100% at 30% 0%,rgba(255,122,184,.14),transparent 60%),
+             radial-gradient(50% 90% at 75% 10%,rgba(179,136,255,.12),transparent 60%);}
+
+/* ===== 布局 ===== */
+.wrap{display:flex;min-height:100vh}
+nav.side{position:fixed;inset:0 auto 0 0;width:288px;background:rgba(24,20,38,.92);backdrop-filter:blur(8px);
+  border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:50;transition:transform .25s}
+nav.side .brand{padding:20px 22px 14px;border-bottom:1px solid var(--border)}
+nav.side .brand .logo{font-size:24px;margin-bottom:4px}
+nav.side .brand h1{font-size:16.5px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1.4}
+nav.side .brand .sub{font-size:11.5px;color:var(--fg3);margin-top:3px}
+nav.side .toc{flex:1;overflow-y:auto;padding:10px 12px 30px}
+nav.side .toc::-webkit-scrollbar{width:6px}
+nav.side .toc::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+nav.side .toc a{display:flex;align-items:center;gap:9px;padding:6px 12px;border-radius:8px;color:var(--fg2);font-size:13.5px;margin:1px 0;transition:.15s}
+nav.side .toc a .no{font-family:var(--mono);font-size:11px;color:var(--pink);opacity:.7}
+nav.side .toc a:hover{background:var(--bg3);color:var(--fg);text-decoration:none}
+nav.side .toc a.active{background:linear-gradient(120deg,rgba(255,122,184,.16),rgba(179,136,255,.16));color:var(--pink2);border:1px solid var(--border2)}
+nav.side .toc a.active .no{opacity:1}
+nav.side .foot{padding:14px 22px;border-top:1px solid var(--border);font-size:11px;color:var(--fg3)}
+main{flex:1;margin-left:288px;padding:40px 48px 90px;max-width:1080px}
+.menu-btn{display:none;position:fixed;top:14px;left:14px;z-index:60;background:var(--card);border:1px solid var(--border2);
+  color:var(--fg);border-radius:10px;padding:8px 14px;font-size:14px;cursor:pointer}
+.mask{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:45}
+@media(max-width:960px){
+  nav.side{transform:translateX(-100%);box-shadow:0 0 50px rgba(0,0,0,.6)}
+  nav.side.open{transform:none}
+  main{margin-left:0;padding:70px 18px 80px}
+  .menu-btn{display:inline-flex}
+  .mask.show{display:block}
+}
+
+/* ===== hero ===== */
+.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(255,122,184,.18),rgba(179,136,255,.08) 55%,transparent);
+  border:1px solid var(--border);border-radius:20px;padding:38px 40px;margin-bottom:36px}
+.hero::after{content:'🎀';position:absolute;right:26px;top:20px;font-size:44px;opacity:.35;transform:rotate(15deg)}
+.hero .tag{display:inline-block;font-size:12px;letter-spacing:1.5px;color:var(--pink2);border:1px solid var(--border2);
+  border-radius:999px;padding:3px 14px;margin-bottom:16px}
+.hero h2{font-size:32px;margin-bottom:10px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{color:var(--fg2);max-width:660px;font-size:15px}
+.hero .meta{margin-top:12px;font-size:12px;color:var(--fg3)}
+.hero .stats{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.hero .stats .s{flex:1;min-width:150px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px}
+.hero .stats .s .lbl{font-size:12px;color:var(--fg3)}
+.hero .stats .s b{display:block;font-size:20px;margin-top:2px;color:var(--pink2)}
+.hero .stats .s .d{font-size:11.5px;color:var(--fg3);margin-top:3px}
+
+/* ===== section ===== */
+section{margin-bottom:56px}
+section h3{font-size:24px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:22px}
+section h3 .no{font-family:var(--mono);font-size:13px;background:var(--grad);color:#fff;border-radius:8px;padding:3px 11px;letter-spacing:.5px}
+section h3 .en{font-family:var(--mono);font-size:12px;color:var(--fg3);font-weight:400}
+h4{font-size:17px;color:var(--pink2);margin:28px 0 10px}
+p{margin:9px 0}
+ul,ol{margin:8px 0 8px 22px}
+li{margin:5px 0}
+strong{color:#fff}
+em{color:var(--purple2);font-style:normal}
+.pill{display:inline-block;font-size:12px;border-radius:999px;padding:1px 10px;margin:0 2px;border:1px solid}
+.pill.p{color:var(--pink2);border-color:rgba(255,122,184,.4);background:rgba(255,122,184,.08)}
+.pill.v{color:var(--purple2);border-color:rgba(179,136,255,.4);background:rgba(179,136,255,.08)}
+.pill.g{color:var(--green);border-color:rgba(111,217,168,.4);background:rgba(111,217,168,.08)}
+.pill.a{color:var(--amber);border-color:rgba(255,195,107,.4);background:rgba(255,195,107,.08)}
+.pill.r{color:var(--red);border-color:rgba(255,125,125,.4);background:rgba(255,125,125,.08)}
+
+/* ===== 卡片网格 ===== */
+.grid{display:grid;gap:14px}
+.grid.c2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.grid.c3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;transition:.18s}
+.card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.card .t{font-size:14.5px;color:var(--pink2);margin-bottom:8px;display:flex;align-items:center;gap:7px}
+.card .t .ic{font-size:16px}
+.card ul{margin-left:18px}
+.card li{font-size:13.5px;color:var(--fg2)}
+.card li b{color:var(--fg)}
+
+/* ===== 表格 ===== */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:14px;background:var(--card);margin:14px 0}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+th{background:var(--bg3);color:var(--pink2);text-align:left;padding:11px 16px;font-weight:600;white-space:nowrap}
+td{padding:11px 16px;border-top:1px solid var(--border);color:var(--fg2);vertical-align:top}
+td b{color:var(--fg)}
+tr:hover td{background:var(--card2)}
+.num{font-family:var(--mono);color:var(--amber)}
+
+/* ===== 时间线 ===== */
+.timeline{position:relative;margin:18px 0 6px;padding-left:30px}
+.timeline::before{content:'';position:absolute;left:9px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--pink),var(--purple))}
+.tl{position:relative;margin-bottom:16px}
+.tl::before{content:'';position:absolute;left:-27px;top:7px;width:12px;height:12px;border-radius:50%;
+  background:var(--bg);border:2px solid var(--pink);box-shadow:0 0 0 3px rgba(255,122,184,.15)}
+.tl .h{font-size:15px;color:var(--fg);font-weight:600;margin-bottom:3px}
+.tl .h .step{font-family:var(--mono);font-size:11.5px;color:var(--pink);margin-right:8px}
+.tl .d{font-size:13.5px;color:var(--fg2)}
+.tl .d code{font-family:var(--mono);font-size:12px;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:1px 6px;color:var(--cyan)}
+
+/* ===== 步骤 ===== */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:16px 0}
+.step-card{position:relative;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px}
+.step-card .num-badge{position:absolute;top:-12px;left:16px;background:var(--grad);color:#fff;font-family:var(--mono);
+  font-size:13px;border-radius:8px;padding:2px 12px}
+.step-card h5{font-size:15.5px;margin:8px 0 6px;color:var(--fg)}
+.step-card p{font-size:13px;color:var(--fg2);margin:0}
+
+/* ===== 案例 ===== */
+.case{border:1px solid var(--border);border-radius:16px;overflow:hidden;margin:18px 0;background:var(--card)}
+.case .head{background:linear-gradient(120deg,rgba(255,122,184,.2),rgba(179,136,255,.14));padding:18px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.case .head .name{font-size:18px;color:#fff;font-weight:700}
+.case .head .badges{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.case .body{padding:20px 22px}
+.case .body h5{color:var(--pink2);font-size:14.5px;margin:14px 0 6px}
+.case .body h5:first-child{margin-top:0}
+
+/* ===== 风险 ===== */
+.risk{display:flex;gap:12px;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--amber);
+  border-radius:12px;padding:14px 18px;margin:10px 0}
+.risk .ic{font-size:20px;line-height:1.6}
+.risk .t{font-size:14.5px;color:var(--fg);font-weight:600;margin-bottom:2px}
+.risk .d{font-size:13px;color:var(--fg2)}
+.risk.warn{border-left-color:var(--amber)}
+.risk.bad{border-left-color:var(--red)}
+.risk.ok{border-left-color:var(--green)}
+
+/* ===== 提示框 ===== */
+.callout{display:flex;gap:14px;background:linear-gradient(120deg,rgba(255,122,184,.1),rgba(179,136,255,.07));
+  border:1px solid var(--border2);border-radius:14px;padding:18px 22px;margin:18px 0}
+.callout .ic{font-size:26px;line-height:1.5}
+.callout .t{font-size:15.5px;color:var(--pink2);font-weight:700;margin-bottom:6px}
+.callout .d{font-size:13.5px;color:var(--fg2)}
+.callout .d a{color:var(--purple2)}
+
+/* ===== 链接清单 ===== */
+.link-list{display:grid;gap:9px;margin-top:14px}
+.link-item{display:flex;gap:12px;align-items:baseline;background:var(--card);border:1px solid var(--border);
+  border-radius:10px;padding:10px 16px;font-size:13.5px;transition:.15s}
+.link-item:hover{border-color:var(--border2);background:var(--card2)}
+.link-item .tag{font-family:var(--mono);font-size:11px;color:var(--pink);flex-shrink:0;min-width:52px}
+.link-item a{word-break:break-all;color:var(--purple2)}
+
+footer{border-top:1px solid var(--border);padding-top:18px;margin-top:40px;font-size:12px;color:var(--fg3);text-align:center}
+
+/* ===== 标签页 ===== */
+.tabs{display:flex;gap:8px;margin:14px 0 0;flex-wrap:wrap}
+.tab-btn{background:var(--card);border:1px solid var(--border2);color:var(--fg2);border-radius:9px;
+  padding:7px 16px;font-size:13px;cursor:pointer;transition:.15s}
+.tab-btn.active{background:var(--grad);color:#fff;border-color:transparent;font-weight:600}
+.tab-pane{display:none}
+.tab-pane.active{display:block;animation:fade .25s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="menu-btn" id="menuBtn">☰ 目录</div>
+<div class="mask" id="mask"></div>
+
+<div class="wrap">
+  <!-- ============ 侧栏目录 ============ -->
+  <nav class="side" id="sideNav">
+    <div class="brand">
+      <div class="logo">🎀</div>
+      <h1>Kig 头壳店铺<br>创业调研报告</h1>
+      <div class="sub">Kigurumi Mask Shop · Research</div>
+    </div>
+    <div class="toc" id="toc">
+      <a href="#sec0"><span class="no">00</span>行业速览</a>
+      <a href="#sec1"><span class="no">01</span>市场与利润</a>
+      <a href="#sec2"><span class="no">02</span>制作工艺全流程</a>
+      <a href="#sec3"><span class="no">03</span>起步投入预算</a>
+      <a href="#sec4"><span class="no">04</span>店铺运营模式</a>
+      <a href="#sec5"><span class="no">05</span>对标案例：偶域</a>
+      <a href="#sec6"><span class="no">06</span>风险提示</a>
+      <a href="#sec7"><span class="no">07</span>落地路线图</a>
+      <a href="#sec8"><span class="no">08</span>资料链接</a>
+    </div>
+    <div class="foot">调研日期 2026-08-30<br>数据来源：公开报道与玩家实测</div>
+  </nav>
+
+  <!-- ============ 主内容 ============ -->
+  <main>
+
+    <!-- Hero -->
+    <div class="hero">
+      <span class="tag">✨ 小众蓝海 · 供不应求 · 资本已入场</span>
+      <h2>Kig 头壳店铺创业调研</h2>
+      <p class="lead">把「二次元纸片人」变成 3D 现实生意：市场行情、制作工艺、成本利润、运营打法、风险与路线图，一次看清。</p>
+      <div class="meta">调研时间：2026-08-30 ｜ 覆盖：国内行情 + 海外参考 + 玩家实测成本</div>
+      <div class="stats">
+        <div class="s"><div class="lbl">行业均价</div><b>≈3000 元</b><div class="d">头部工坊 6000-10000+</div></div>
+        <div class="s"><div class="lbl">单壳物料成本</div><b>250-400 元</b><div class="d">自建模可压到 200-300</div></div>
+        <div class="s"><div class="lbl">市场需求</div><b>供不应求</b><div class="d">主流工坊排单半年以上</div></div>
+        <div class="s"><div class="lbl">赛道信号</div><b>融资破圈</b><div class="d">偶域获奇绩创坛种子轮</div></div>
+      </div>
+    </div>
+
+    <!-- 00 行业速览 -->
+    <section id="sec0">
+      <h3><span class="no">00</span>行业速览 <span class="en">OVERVIEW</span></h3>
+      <div class="grid c2">
+        <div class="card">
+          <div class="t"><span class="ic">🎭</span>什么是 Kigurumi（人偶扮演）</div>
+          <ul>
+            <li>源自日本「<b>着ぐるみ</b>」，海外称 <b>Animegao</b>（アニメ顔）</li>
+            <li>戴硬质动漫脸壳 + 穿全包紧身衣（<b>kig 皮</b>），追求「手办感」还原</li>
+            <li>起源于日本动画官方舞台表演，2005 年前后走向海外</li>
+            <li>玩家多为<b>男性扮演女性角色</b>（圈内男女比约 2:1）</li>
+            <li>头壳 = <em>3D 打印/翻模硬质脸壳</em> + <em>手作假发</em> + <em>妆面（眼片/睫毛/唇妆）</em></li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="t"><span class="ic">📈</span>市场规模与趋势</div>
+          <ul>
+            <li>泛二次元用户 2024 年达 <b>5.03 亿</b>（艾媒咨询），kig 是其中高速增长的小众细分</li>
+            <li>2025 年上海 BW 漫展 kig 玩家一次合照 <b>20+ 人</b>（往年一天仅 3-5 个）</li>
+            <li>行业头部商家获 <b>奇绩创坛种子轮融资</b>，资本开始关注</li>
+            <li>供给严重不足：小作坊月产 3-15 单，头部工坊工期 <b>3 个月到 1 年半</b></li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout">
+        <div class="ic">💡</div>
+        <div><div class="t">市场痛点 = 新人机会</div>
+        <div class="d">① <b>产能不足</b>：需求大于供给，订单积压；② <b>价格高企</b>：均价 3000 元挡住大量观望玩家；③ <b>质量不稳</b>：小作坊靠经验，「可爱」不可复制 → 谁能标准化、降成本、保品控，谁就能吃到这波红利。</div></div>
+      </div>
+    </section>
+
+    <!-- 01 市场与利润 -->
+    <section id="sec1">
+      <h3><span class="no">01</span>市场价格与利润空间 <span class="en">PRICING</span></h3>
+
+      <h4>💰 国内价格带</h4>
+      <div class="tbl-wrap"><table>
+        <tr><th>档位</th><th>价格</th><th>说明</th></tr>
+        <tr><td><span class="pill p">低价入门</span></td><td><b>998 - 2000 元</b></td><td>偶域 KIGLAND 998 元破圈，2000 元档新店增多</td></tr>
+        <tr><td><span class="pill v">行业基准线</span></td><td><b>≈3000 元</b></td><td>主流定制工坊均价，入坑玩家公认基准</td></tr>
+        <tr><td><span class="pill a">头部精品</span></td><td><b>6000 - 10000+ 元</b></td><td>河妖工坊等老牌，做工与口碑溢价</td></tr>
+        <tr><td><span class="pill g">二手流转</span></td><td><b>500 - 3000 元</b></td><td>闲鱼玩家出手，注意卫生与品相</td></tr>
+      </table></div>
+
+      <h4>🌍 海外参考（DreammaskStudio 等）</h4>
+      <div class="grid c3">
+        <div class="card"><div class="t">定制头壳</div><b class="num">US$1350 - 1500</b><p style="font-size:13px;color:var(--fg3)">约 ¥9500 - 10500</p></div>
+        <div class="card"><div class="t">现货头壳</div><b class="num">US$295 - 1000+</b><p style="font-size:13px;color:var(--fg3)">约 ¥2000 - 7000</p></div>
+        <div class="card"><div class="t">制作周期</div><b class="num">≈60 个工作日</b><p style="font-size:13px;color:var(--fg3)">建模→制作→确认→发货</p></div>
+      </div>
+
+      <h4>🧮 成本拆解（自制教程实测，2024）</h4>
+      <div class="grid c3">
+        <div class="card"><div class="t">🖨️ 白模打印</div><b class="num">≈50 元</b><p style="font-size:13px;color:var(--fg3)">自备 3D 打印机耗材；找代打约 200-300 元</p></div>
+        <div class="card"><div class="t">💇 假发</div><b class="num">42 - 数百元</b><p style="font-size:13px;color:var(--fg3)">普通假发改造便宜，专用 kig 假发贵</p></div>
+        <div class="card"><div class="t">🎨 涂装材料</div><b class="num">≈100 元</b><p style="font-size:13px;color:var(--fg3)">水补土/色漆/消光漆/砂纸</p></div>
+        <div class="card"><div class="t">🔩 配件</div><b class="num">≈60 元</b><p style="font-size:13px;color:var(--fg3)">眼片/睫毛/海绵/磁铁/金属件/魔术贴</p></div>
+        <div class="card"><div class="t">📦 单壳物料合计</div><b class="num">250 - 400 元</b><p style="font-size:13px;color:var(--fg3)">不含人工与设备折旧</p></div>
+        <div class="card"><div class="t">🛒 自制一套全副</div><b class="num">≈1000 元</b><p style="font-size:13px;color:var(--fg3)">头壳 + kig 皮(≈380) + cos 服(≈400)</p></div>
+      </div>
+
+      <div class="callout">
+        <div class="ic">📊</div>
+        <div><div class="t">毛利参考</div>
+        <div class="d">按 <b>1500 元售价</b>、<b>350 元物料</b>估算，单只毛利约 <b>1100+ 元</b>（未计入人工/报废/运费）。KIGLAND 用「自建模 + 外包打印」把脸壳成本压到 <b>200-300 元</b>，支撑 998 元低价仍可持续。关键成本变量是 <em>人工</em>（建模/涂装/假发纯手工）与 <em>报废率</em>（新手阶段 10 个里 1 个能看）。</div></div>
+      </div>
+    </section>
+
+    <!-- 02 制作工艺 -->
+    <section id="sec2">
+      <h3><span class="no">02</span>制作工艺全流程 <span class="en">PRODUCTION</span></h3>
+      <div class="timeline">
+        <div class="tl"><div class="h"><span class="step">STEP 1</span>建模（白模）</div>
+          <div class="d">新手直接用开源免费模型：<code>Thingiverse @Leide</code>、<code>GitHub plumKigurumi</code>、<code>ArisakaMashiro</code>、<code>MakerWorld</code>；进阶自研建模（KIGLAND 靠自学把脸壳成本从 1000+ 压到 200-300 元）。注意头围要大于用户头围（海绵可调）、半面/3/4/全头类型、脸型自定义。</div></div>
+        <div class="tl"><div class="h"><span class="step">STEP 2</span>打印 / 成型</div>
+          <div class="d">家用 FDM（如拓竹 A1，构建尺寸 ≥ 256mm³，全头后壳可切分打印），材料推荐 <code>PLA</code>（PETG 打磨费力）；高精度可选光固化；工业化用吸塑机热塑成型（KIGLAND：2000W+，160°C）。无打印机可找代打，脸壳代打约 200-300 元。</div></div>
+        <div class="tl"><div class="h"><span class="step">STEP 3</span>组装金属件</div>
+          <div class="d">顶部转轴（<code>M4×60 半牙螺栓</code>）、两侧卡扣（<code>M3 螺丝+螺母</code>、<code>中箱扣 3018</code>，以模型说明为准），502 胶水固定。</div></div>
+        <div class="tl"><div class="h"><span class="step">STEP 4</span>补土 · 打磨 · 喷漆 <span class="pill r">最难点</span></div>
+          <div class="d">流程：水补土 → 打磨 → 白色底漆 → 角色色 → 消光漆。低成本方案：水补土 → 打磨 → 三和 40# 白 → 三和 313# 浅粉 → 消光。注意：漆未干勿碰、高湿勿喷消光、做好个人防护。</div></div>
+        <div class="tl"><div class="h"><span class="step">STEP 5</span>面妆</div>
+          <div class="d">嘴唇建议必画（丙烯颜料），其他妆面可选，增加生动感。</div></div>
+        <div class="tl"><div class="h"><span class="step">STEP 6</span>眼片</div>
+          <div class="d">基底用 <code>PVC 防尘网（0.5mm 孔径）</code>，素材抠图/自绘后打印到不干胶纸裁剪粘贴；固定用胶带/热熔胶/磁铁。</div></div>
+        <div class="tl"><div class="h"><span class="step">STEP 7</span>睫毛</div>
+          <div class="d">黑色不织布裁剪成型，先纸上打草稿再贴。</div></div>
+        <div class="tl"><div class="h"><span class="step">STEP 8</span>内衬海绵</div>
+          <div class="d">中高密度海绵 + 绑带/纳米胶固定，<b>装假发前</b>调好舒适贴合度。</div></div>
+        <div class="tl"><div class="h"><span class="step">STEP 9</span>假发</div>
+          <div class="d">普通假发 + 四个魔术贴固定在头壳上再修剪造型；进阶：雇专业托尼老师，一个下午剪 5 个头。</div></div>
+        <div class="tl"><div class="h"><span class="step">STEP 10</span>升级黑科技 <span class="pill v">差异化</span></div>
+          <div class="d">头壳内加小屏幕、风扇散热、宽视野眼网孔等，圈内已有工坊在做，可作为卖点。</div></div>
+      </div>
+    </section>
+
+    <!-- 03 起步投入 -->
+    <section id="sec3">
+      <h3><span class="no">03</span>起步投入预算 <span class="en">BUDGET</span></h3>
+      <div class="tabs" id="budgetTabs">
+        <button class="tab-btn active" data-tab="planA">方案 A · 个人小作坊</button>
+        <button class="tab-btn" data-tab="planB">方案 B · 标准工作室</button>
+      </div>
+
+      <div class="tab-pane active" id="planA">
+        <div class="tbl-wrap"><table>
+          <tr><th>项目</th><th>预算（约）</th><th>备注</th></tr>
+          <tr><td>3D 打印机（拓竹 A1 级别）</td><td class="num">2000 - 3000 元</td><td>构建尺寸需 ≥ 256mm³</td></tr>
+          <tr><td>喷漆工具（气泵 + 喷笔 + 防护）</td><td class="num">800 - 1500 元</td><td>含口罩/通风</td></tr>
+          <tr><td>打磨 / 组装工具</td><td class="num">300 - 500 元</td><td>砂纸、胶水、金属件等</td></tr>
+          <tr><td>首批物料</td><td class="num">1000 - 2000 元</td><td>耗材 / 漆 / 假发 / 配件</td></tr>
+          <tr><td>样壳练习 + 废料损耗</td><td class="num">1000 - 2000 元</td><td>新手阶段必要学费</td></tr>
+          <tr><td><b>合计</b></td><td class="num"><b>≈5000 - 9000 元</b></td><td>1-2 人，从接单做起</td></tr>
+        </table></div>
+      </div>
+
+      <div class="tab-pane" id="planB">
+        <div class="grid c2">
+          <div class="card"><div class="t">🏭 投入构成</div>
+            <ul>
+              <li>场地：民宅 / 工业园区厂房</li>
+              <li>设备：打印 / 吸塑 / 喷漆 / 假发工作台</li>
+              <li>人员：建模、涂装、假发（可挖托尼老师，昆山月薪 <b class="num">1.3 万</b>）</li>
+              <li>参考：KIGLAND 两人掏空积蓄 + 贷款共 <b class="num">≈20 万元</b></li>
+            </ul>
+          </div>
+          <div class="card"><div class="t">⚠️ 注意</div>
+            <ul>
+              <li>吸塑机功率 <b class="num">2000W+</b>，作业温度 <b class="num">160°C</b>，需考虑电费与散热</li>
+              <li>厂房选址兼顾租金与物流（KIGLAND 选昆山花桥，地价低）</li>
+              <li>建议先用方案 A 验证市场，再决定是否投入重资产</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 运营模式 -->
+    <section id="sec4">
+      <h3><span class="no">04</span>店铺运营模式 <span class="en">OPERATIONS</span></h3>
+
+      <h4>📣 销售渠道</h4>
+      <div class="grid c3">
+        <div class="card"><div class="t">🛍️ 淘宝店</div><ul><li>主流阵地，下单分<b>排单</b>（随时下单排队，主流店半年以上）与<b>抢单</b>（关注群公告抢名额）</li></ul></div>
+        <div class="card"><div class="t">🔄 闲鱼</div><ul><li>工坊分店 + 二手头壳流通；注意品控与卫生</li></ul></div>
+        <div class="card"><div class="t">💬 私域社群</div><ul><li>QQ/微信群沉淀粉丝，发大额券破圈（KIGLAND 早期打法）</li></ul></div>
+        <div class="card"><div class="t">📹 B站 / 小红书</div><ul><li>展示成品 + 记录制作过程引流（创始人早期就是 B 站 vtuber）</li></ul></div>
+        <div class="card"><div class="t">🎪 漫展</div><ul><li>线下展示 + 现场接单，BW 等大展是曝光核心</li></ul></div>
+        <div class="card"><div class="t">⚙️ 订单系统</div><ul><li>订单多了表格会失控；可自建 NocoBase 系统（3 周上线，吞吐 3 倍、错误率降 80%）</li></ul></div>
+      </div>
+
+      <h4>🧾 接单流程（参考海外工作室）</h4>
+      <div class="timeline">
+        <div class="tl"><div class="h"><span class="step">1</span>提交需求</div><div class="d">客户给 4-5 张角色参考图 → 沟通确认细节</div></div>
+        <div class="tl"><div class="h"><span class="step">2</span>报价付款</div><div class="d">含附加定制费用报价 → 客户付款</div></div>
+        <div class="tl"><div class="h"><span class="step">3</span>建模确认</div><div class="d">建模完成与客户确认角色，可修改一次细节（整体不可改）</div></div>
+        <div class="tl"><div class="h"><span class="step">4</span>制作交付</div><div class="d">完成后拍照/视频确认 → 包装发货；非质量问题不退换（定制惯例）</div></div>
+      </div>
+
+      <h4>💎 定价策略参考</h4>
+      <div class="grid c3">
+        <div class="card"><div class="t">🚀 低价破圈流</div><ul><li>KIGLAND 式：998 元入场 + 免费重做承诺 → 拉新后涨到 2000 元档</li></ul></div>
+        <div class="card"><div class="t">💎 精品高利润流</div><ul><li>3000-6000 元，靠口碑与排队效应，慢工出细活</li></ul></div>
+        <div class="card"><div class="t">🔀 双线组合</div><ul><li>角色成品现货（低价走量）+ 定制（高价利润）双线并行</li></ul></div>
+      </div>
+    </section>
+
+    <!-- 05 对标案例 -->
+    <section id="sec5">
+      <h3><span class="no">05</span>对标案例：偶域 KIGLAND <span class="en">CASE STUDY</span></h3>
+      <div class="case">
+        <div class="head">
+          <div class="name">偶域 KIGLAND 🎀</div>
+          <div class="badges">
+            <span class="pill p">998 元破圈</span>
+            <span class="pill v">奇绩创坛种子轮</span>
+            <span class="pill g">1 年多拿融资</span>
+          </div>
+        </div>
+        <div class="body">
+          <h5>创始人画像</h5>
+          <p>李明威（00 后，2024 年入行）：速滑运动员 / 教练 / 软件外包 / Web3 CTO / 同人漫展策展人出身——<em>跨行业背景 + 老二次元</em>，2016 年就进口「吧唧」到哈尔滨漫展卖。</p>
+          <h5>发展时间线</h5>
+          <div class="timeline">
+            <div class="tl"><div class="h"><span class="step">2023</span>起步</div><div class="d">昆山花桥镇民宅，自学 3D 建模 + 缝纫机拆了做发网，10 个样壳 1 个能看</div></div>
+            <div class="tl"><div class="h"><span class="step">2024</span>破圈</div><div class="d">998 元低价 + 免费重做承诺，早期实付 698 元，粉丝群发 300 元大额券</div></div>
+            <div class="tl"><div class="h"><span class="step">2025</span>融资扩产</div><div class="d">获奇绩创坛种子轮，搬入昆山工业园区一整层，订单管理上 NocoBase</div></div>
+          </div>
+          <h5>核心打法（可直接抄作业）</h5>
+          <div class="grid c2">
+            <div class="card"><div class="t">🏗️ 供应链降本</div><ul><li>自建模 + 外包打印，脸壳 <b class="num">200-300 元</b>（同行外包报价 1000+）</li><li>标准化工序，把「经验活」拆成可复制流水线</li></ul></div>
+            <div class="card"><div class="t">💇 假发工业化</div><ul><li>雇专业托尼老师（月薪 <b class="num">1.3 万</b>，当地平均 4-5k），单下午剪 5 个头，取代毛娘手工</li></ul></div>
+            <div class="card"><div class="t">🧠 数字化管理</div><ul><li>GitHub Issues → NocoBase 订单系统：订单全生命周期 + 物料库存 + 跨岗位协作</li></ul></div>
+            <div class="card"><div class="t">🤖 AI 建模</div><ul><li>从平面图自动生成 3D 素体，一键传图出模型，降低定制沟通成本</li></ul></div>
+          </div>
+          <div class="callout" style="margin-top:16px">
+            <div class="ic">💭</div>
+            <div><div class="t">对我们的启示</div>
+            <div class="d">被同行骂「破坏市场」，但拉低了门槛、扩大了玩家基数——<b>对新入场的你反而是机会</b>：低价教育了市场，让更多人愿意买第一个头壳；你要做的是在「品质 + 效率 + 差异化」上找到自己的生态位。</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 风险 -->
+    <section id="sec6">
+      <h3><span class="no">06</span>风险提示 <span class="en">RISKS</span></h3>
+      <div class="risk bad"><div class="ic">⚖️</div><div><div class="t">版权风险</div><div class="d">定制热门动漫角色（甘雨、有坂真白等）属同人灰色地带；商用知名 IP 有侵权风险。建议多接原创 / OC 角色，或了解版权方态度（海外已有 Spiderman 授权问题的公开讨论）。</div></div></div>
+      <div class="risk warn"><div class="ic">🎨</div><div><div class="t">品控风险</div><div class="d">「可爱」是主观概率事件，修改需求千人千面（刘海位置、睫毛、眼睛神态），免费重做承诺可能吃掉利润——售后条款要写清楚。</div></div></div>
+      <div class="risk warn"><div class="ic">⏳</div><div><div class="t">产能瓶颈</div><div class="d">涂装 / 假发纯手工，难以无限扩产，毛利会被人工吞噬——需尽早标准化或外协。</div></div></div>
+      <div class="risk warn"><div class="ic">🛡️</div><div><div class="t">健康与安全</div><div class="d">喷漆作业（溶剂/粉尘）需专业防护；吸塑 160°C 高温作业要注意通风降温（KIGLAND 夏天 40°C 只开小米风扇）。</div></div></div>
+      <div class="risk bad"><div class="ic">🏪</div><div><div class="t">小作坊生命周期短</div><div class="d">同行小店普遍月 3-5 单，有人回厂上班、有人退圈——可持续性差是行业通病，想长期做必须尽早标准化。</div></div></div>
+      <div class="risk ok"><div class="ic">📜</div><div><div class="t">退货政策</div><div class="d">定制商品建议明确「非质量问题不退换」，但需符合电商平台规则，避免纠纷。</div></div></div>
+    </section>
+
+
+    <!-- 07 路线图 -->
+    <section id="sec7">
+      <h3><span class="no">07</span>落地路线图（0 → 1） <span class="en">ROADMAP</span></h3>
+      <div class="steps">
+        <div class="step-card">
+          <div class="num-badge">PHASE 1</div>
+          <h5>验证手艺 · 1-2 个月</h5>
+          <p>预算 <b>5000-9000 元</b>。买入门打印机 + 喷漆工具，用开源模型做 2-3 个样壳（不同脸型/角色）；B站/小红书记录过程积累粉丝。目标：稳定做出「自己满意 + 圈友认可」的成品。</p>
+        </div>
+        <div class="step-card">
+          <div class="num-badge">PHASE 2</div>
+          <h5>小规模接单 · 第 3 个月起</h5>
+          <p>开淘宝店 + 闲鱼分店 + 粉丝群；从 <b>1500-2500 元</b>档起步（比均价略低抢首单），现货 + 定制双线；明确排单周期并承诺交付，用好评攒口碑；每单记录成本算清真实毛利。</p>
+        </div>
+        <div class="step-card">
+          <div class="num-badge">PHASE 3</div>
+          <h5>标准化扩产 · 半年后</h5>
+          <p>订单上来后上 <b>NocoBase</b> 类订单系统；沉淀建模模板库 + 涂装色卡 + 假发打版；考虑外协（打印代工/假发外包）与招人；视现金流决定是否走融资路线。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 资料链接 -->
+    <section id="sec8">
+      <h3><span class="no">08</span>资料链接 <span class="en">SOURCES</span></h3>
+      <div class="link-list">
+        <div class="link-item"><span class="tag">教程</span><a href="https://blog.akyuu.cn/post/24072701/" target="_blank" rel="noopener">记一次自制 Kigurumi 头壳（全流程实测，成本与工艺参考）</a></div>
+        <div class="link-item"><span class="tag">报道</span><a href="https://www.thepaper.cn/newsDetail_forward_31783512" target="_blank" rel="noopener">卖价过万的大头娃娃（澎湃，KIGLAND 案例详述）</a></div>
+        <div class="link-item"><span class="tag">运营</span><a href="https://www.nocobase.com/cn/blog/kigland/" target="_blank" rel="noopener">KIGLAND 如何用开源工具做柔性制造（NocoBase）</a></div>
+        <div class="link-item"><span class="tag">入坑</span><a href="https://kiger.cn/kigurumi入坑指南" target="_blank" rel="noopener">kigurumi 入坑指南（kiger.cn：预算/店铺/装备）</a></div>
+        <div class="link-item"><span class="tag">文化</span><a href="https://zh.m.wikipedia.org/wiki/人偶扮演" target="_blank" rel="noopener">人偶扮演（维基百科，起源与海外传播）</a></div>
+        <div class="link-item"><span class="tag">海外</span><a href="https://www.dreammask.net/zh/product-page/hidolls-customization-kigurumi-mask" target="_blank" rel="noopener">DreammaskStudio 定制价格参考（US$1350-1500）</a></div>
+        <div class="link-item"><span class="tag">模型</span><a href="https://www.thingiverse.com/thing:5316376" target="_blank" rel="noopener">开源头壳模型 · Thingiverse @Leide</a></div>
+        <div class="link-item"><span class="tag">模型</span><a href="https://github.com/vuicoo/plumKigurumi-" target="_blank" rel="noopener">开源头壳模型 · GitHub plumKigurumi</a></div>
+        <div class="link-item"><span class="tag">模型</span><a href="https://github.com/AEMShana/ArisakaMashiroKigurumi" target="_blank" rel="noopener">开源头壳模型 · GitHub ArisakaMashiro</a></div>
+        <div class="link-item"><span class="tag">预算</span><a href="https://post.smzdm.com/p/ak8x0628/" target="_blank" rel="noopener">100元DIY/500元二手/定制四位起：kig 头壳到底花多少钱（什么值得买）</a></div>
+        <div class="link-item"><span class="tag">版权</span><a href="https://www.kigurumi.com/blogs/kigurumi-news/spider-man-kigurumi-and-the-licensing-question-in-2025" target="_blank" rel="noopener">Spider-Man Kigurumi 与授权问题（英文）</a></div>
+      </div>
+    </section>
+
+    <footer>🎀 Kig 头壳店铺创业调研报告 · 制作于 2026-08-30 · 数据来源：公开报道与玩家实测，仅供参考</footer>
+  </main>
+</div>
+
+<script>
+// 移动端菜单
+const menuBtn=document.getElementById('menuBtn'),mask=document.getElementById('mask'),nav=document.getElementById('sideNav');
+function closeNav(){nav.classList.remove('open');mask.classList.remove('show')}
+menuBtn.onclick=()=>{nav.classList.toggle('open');mask.classList.toggle('show')};
+mask.onclick=closeNav;
+
+// 目录高亮（滚动监听）
+const links=[...document.querySelectorAll('#toc a')];
+const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+const tocWrap=document.querySelector('#toc');
+function onScroll(){
+  let cur=secs[0];
+  for(let i=0;i<secs.length;i++){ if(secs[i].getBoundingClientRect().top<=120) cur=secs[i]; }
+  links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+cur.id));
+}
+window.addEventListener('scroll',onScroll,{passive:true});
+onScroll();
+
+// 预算标签页
+document.querySelectorAll('#budgetTabs .tab-btn').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('#budgetTabs .tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  };
+});
+</script>
+</body>
+</html>
