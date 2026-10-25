@@ -2,7 +2,8 @@
 
 Kigurumi（人偶扮演）头壳定制行业的创业调研可视化页面：市场行情、制作工艺、成本利润、运营打法与风险提示。
 
-- 🌐 在线访问：<https://missfor100.github.io/kig-head-shop/>
+- 🌐 在线访问：<https://lugabeeee.github.io/kig-head-shop/>
+- 🔧 工艺手册（详细版，12 步工序 / 33 张表）：<https://lugabeeee.github.io/kig-head-shop/headshell-craft.html>
 - 📅 调研日期：2026-08-30
 - 📝 数据来源：公开报道与玩家实测，仅供参考
 
